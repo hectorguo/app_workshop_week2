@@ -1,12 +1,20 @@
 {
-    "name": "appweek2-api",
-    "main": "server.js",
-    "dependencies": {
-        "express": "~4.14.0",
-        "body-parser": "~1.15.2",
-        "mocha": "~3.0.2"
-    },
-    "devDependencies": {
-        "supertest" : "~2.0.0"
-    }
+  "version": "1.1.0",
+  "name": "appweek2-api",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "~1.15.2",
+    "express": "~4.14.0",
+    "open": "0.0.5"
+  },
+  "devDependencies": {
+    "mocha": "^3.0.2",
+    "supertest": "~2.0.0"
+  },
+  "scripts": {
+    "server": "node server.js",
+    "test": "npm run test-node && npm run test-browser",
+    "test-node": "mocha -R spec ./test/test.js",
+    "test-browser": "mocha-phantomjs ./test/browser/index.html"
+  }
 }
