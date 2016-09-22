@@ -57,10 +57,10 @@ describe('Driver', () => {
         });
     });
     describe('GET /api/driver/:id', () => {
-        it('should return 200 OK (first_name: John)', (done) => {
+        it('should return 200 OK (first_name: AABB)', (done) => {
             get('/api/driver/d_1')
                 .then((res) => {
-                    expect(res.first_name).to.be('John');
+                    expect(res.first_name).to.be('AABB');
                     done();
                 });
         });
@@ -160,7 +160,7 @@ describe('Car (sub resource)', () => {
             })
             .then(() => get('/api/driver/d_1/car'))
             .then((res) => {
-                expect(res.color).to.be.a('white');
+                expect(res.color).to.be('white');
             });
         });
     });
@@ -218,10 +218,10 @@ describe('Passenger', () => {
         });
     });
     describe('Remove passenger', () => {
-        it('should return 200 OK and msg', (done) => {
+        it('should return 200 OK', (done) => {
             del('/api/passenger/p_1')
             .then((res) => {
-                expect(res).to.have.key('msg');
+                expect(res).to.be.an('object');
                 done();
             });
         });
