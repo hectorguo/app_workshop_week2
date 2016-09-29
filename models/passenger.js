@@ -37,4 +37,6 @@ const PassengerSchema = new Schema({
     phoneNumber: Number
 });
 
+PassengerSchema.plugin(mongooseHidden);
+
 module.exports = mongoose.model('Passenger', PassengerSchema);

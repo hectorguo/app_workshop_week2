@@ -37,4 +37,6 @@ const DriverSchema = new Schema({
     phoneNumber: Number
 });
 
+DriverSchema.plugin(mongooseHidden);
+
 module.exports = mongoose.model('Driver', DriverSchema);
