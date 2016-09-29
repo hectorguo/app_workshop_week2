@@ -25,9 +25,13 @@ mongoose.connect(MONGO_URL);
 // =============================================================================
 const router = express.Router();              // get an instance of the express Router
 
+const utils = require('./utils');
+
 const car = require('./controllers/car');
 const driver = require('./controllers/driver');
 const passenger = require('./controllers/passenger');
+const paymentAccount = require('./controllers/paymentAccount');
+const ride = require('./controllers/ride');
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function (req, res) {
@@ -37,17 +41,13 @@ router.get('/', function (req, res) {
 app.use('/api', car);
 app.use('/api', driver);
 app.use('/api', passenger);
-// more routes for our API will happen here
+app.use('/api', paymentAccount);
+app.use('/api', ride);
 
-// We will simulate a database output, for a real app you should use an ORM an create a data model to work through the different CRUD operations
-// // REGISTER OUR ROUTES -------------------------------
-// // all of our routes will be prefixed with /api
-// app.use('/api', router);
-
+// invalid resource
 app.use((req, res, next) => {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+    utils.reportError(404, 1001, 'resource not found', res);
+    next();
 });
 
 app.use('/test', express.static('test/browser'));

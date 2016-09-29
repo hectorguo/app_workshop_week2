@@ -31,7 +31,19 @@ class ModelHandle {
     create(info) {
         return new Promise((resolve, reject) => {
             if (!info || !Object.keys(info).length) {
-                utils.throwIfMissing(`${this.name} info`);
+                // simulate mongoose error
+                reject({
+                    kind: 'empty',
+                    path: this.name
+                });
+                // utils.throwIfMissing(`${this.name} info`);
+            }
+
+            if (info.id || info._id) {
+                reject({
+                    kind: 'noId',
+                    path: this.name
+                });
             }
 
             const Model = this.model;

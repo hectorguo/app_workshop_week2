@@ -16,7 +16,7 @@ function reportError(statusCode, errorCode, errorMsg, res) {
             statusTxt: statusMsg[statusCode],
             errorCode,
             errorMsg,
-            timestamp: Date.now()
+            requestTime: Date.now()
         })
         .end();
 }
@@ -34,7 +34,7 @@ function getErrorInfo(type, source) {
             status: 400
         },
         1003: {
-            type: 'typeerror',
+            type: 'typeError',
             msg: `${source} type error`,
             status: 400
         },
@@ -49,12 +49,12 @@ function getErrorInfo(type, source) {
             status: 400
         },
         1006: {
-            type: 'notvalidattr',
+            type: 'notValidAttr',
             msg: `attribute ${source} is not valid`,
             status: 400
         },
         1007: {
-            type: 'notid',
+            type: 'noId',
             msg: 'Id should not be provided',
             status: 400
         },
@@ -64,8 +64,13 @@ function getErrorInfo(type, source) {
             status: 400
         },
         1009: {
-            type: 'notunique',
+            type: 'notUnique',
             msg: `${source} is not unique`,
+            status: 400
+        },
+        1010: {
+            type: 'ObjectId',
+            msg: `resouce ${source} not found`,
             status: 400
         }
     }
@@ -75,7 +80,7 @@ function getErrorInfo(type, source) {
     for(let key in errorType) {
         if(errorType[key].type === type) {
             errorInfo = {
-                errorCode: key,
+                errorCode: key | 0,
                 errorMsg: errorType[key].msg,
                 statusCode: errorType[key].status
             }
@@ -83,30 +88,30 @@ function getErrorInfo(type, source) {
     }
     return errorInfo;
     // let statusCode = 200;
-    // let errCode;
-    // let errMsg = '';
+    // let errorCode;
+    // let errorMsg = '';
 
     // switch (type) {
     //     case errorType.REQUIRED:
     //         statusCode = 400;
-    //         errCode = 1002;
-    //         errMsg = `${source} required`;
+    //         errorCode = 1002;
+    //         errorMsg = `${source} required`;
     //         break;
     //     case errorType.NOTVALID:
     //         statusCode = 400;
-    //         errCode = 1001;
-    //         errMsg = `${source} is not valid`;
+    //         errorCode = 1001;
+    //         errorMsg = `${source} is not valid`;
     //         break;
     //     case errorType.TYPEERR:
     //         statusCode = 400;
-    //         errCode = 1003;
-    //         errMsg = `${source} type error`;
+    //         errorCode = 1003;
+    //         errorMsg = `${source} type error`;
     //         break;
     // }
     // return {
     //     statusCode,
-    //     errCode,
-    //     errMsg
+    //     errorCode,
+    //     errorMsg
     // }
 };
 
@@ -123,11 +128,11 @@ function handleMongooError(err, res, source) {
         // custom error
         errorInfo = {
             statusCode: 400,
-            errCode: 1001,
-            errMsg: err.message
+            errorCode: 1001,
+            errorMsg: err.message
         }
     }
-    reportError(errorInfo.statusCode, errorInfo.errCode, errorInfo.errMsg, res);
+    reportError(errorInfo.statusCode, errorInfo.errorCode, errorInfo.errorMsg, res);
 };
     
 function throwIfMissing(param) {

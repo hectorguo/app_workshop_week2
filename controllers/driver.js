@@ -4,12 +4,14 @@ const express = require('express');
 const router = express.Router();
 
 const Driver = require('../models/driver');
+const Car = require('../models/car');
+
 const utils = require('../utils');
 const ModelHandle = require('./factory');
 
 
 const driverHandle = new ModelHandle(Driver, 'Driver');
-
+const carHandle = new ModelHandle(Car, 'Car');
 
 router.route('/drivers')
     /**
@@ -88,6 +90,31 @@ router.route('/drivers/:driver_id')
             .catch((err) => {
                 utils.handleMongooError(err, res);
             })
+    });
+
+
+router.route('/drivers/:driver_id/cars')
+    .get((req, res) => {
+        Car.findOne({driver: req.params.driver_id}, (err, car) => {
+            if(err) {
+                utils.handleMongooError(err, res);
+                return;
+            }
+            res.status(200).json(car);
+        })
+    })
+    .post((req, res) => {
+        driverHandle.get(req.params.driver_id)
+            .then((driver) => {
+                req.body.driver = driver._id;
+                return carHandle.create(req.body);
+            })
+            then((response) => {
+                res.json(response);
+            })
+            .catch((err) => {
+                utils.handleMongooError(err, res);
+            });
     });
 
 module.exports = router;
