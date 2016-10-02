@@ -1,6 +1,6 @@
 'use strict';
 
-function reportError(statusCode, errorCode, errorMsg, res) {
+function reportError(statusCode, errorCode, errorMessage, res) {
     const statusMsg = {
         200: 'OK',
         201: 'Created',
@@ -15,124 +15,54 @@ function reportError(statusCode, errorCode, errorMsg, res) {
             status: statusCode,
             statusTxt: statusMsg[statusCode],
             errorCode,
-            errorMsg,
+            errorMessage,
             requestTime: Date.now()
         })
         .end();
 }
 
-function getErrorInfo(type, source) {
+function getErrorInfo(type, source, msg) {
     const errorType = {
-        1001: {
-            type: 'notvalid',
-            msg: `${source} is not valid`,
-            status: 500
-        },
-        1002: {
-            type: 'required',
-            msg: `${source} required`,
-            status: 400
-        },
-        1003: {
-            type: 'typeError',
-            msg: `${source} type error`,
-            status: 400
-        },
-        1004: {
-            type: 'empty',
-            msg: 'empty body',
-            status: 400
-        },
-        1005: {
-            type: 'format',
-            msg: 'data format error',
-            status: 400
-        },
-        1006: {
-            type: 'notValidAttr',
-            msg: `attribute ${source} is not valid`,
-            status: 400
-        },
-        1007: {
-            type: 'noId',
-            msg: 'Id should not be provided',
-            status: 400
-        },
-        1008: {
-            type: 'duplicated',
-            msg: `${source} duplicated`,
-            status: 400
-        },
-        1009: {
-            type: 'notUnique',
-            msg: `${source} is not unique`,
-            status: 400
-        },
-        1010: {
-            type: 'ObjectId',
-            msg: `resouce ${source} not found`,
-            status: 400
-        }
-    }
+        'notvalid': {errorCode: 1001, statusCode: 500, errorMessage: msg ? msg: `${source} is not valid` },
+        'required': {errorCode: 1002, statusCode: 400, errorMessage: msg ? msg: `${source} required` },
+        'typeError': {errorCode: 1003, statusCode: 400, errorMessage: msg ? msg: `${source} type error` },
+        'empty': {errorCode: 1004, statusCode: 400, errorMessage: msg ? msg: 'empty body' },
+        'format': {errorCode: 1005, statusCode: 400, errorMessage: msg ? msg: 'data format error' },
+        'notValidAttr': {errorCode: 1006, statusCode: 400, errorMessage: msg ? msg: `attribute ${source} is not valid` },
+        'noId': {errorCode: 1007, statusCode: 400, errorMessage: msg ? msg: 'Id should not be provided' },
+        'duplicated': {errorCode: 1008, statusCode: 400, errorMessage: msg ? msg: `${source} duplicated` },
+        'notUnique': {errorCode: 1009, statusCode: 400, errorMessage: msg ? msg: `${source} is not unique` },
+        'ObjectId': {errorCode: 1010, statusCode: 400, errorMessage: msg ? msg: `resouce ${source} not found`}
+    };
 
-    let errorInfo;
-
-    for(let key in errorType) {
-        if(errorType[key].type === type) {
-            errorInfo = {
-                errorCode: key | 0,
-                errorMsg: errorType[key].msg,
-                statusCode: errorType[key].status
-            }
-        }
-    }
-    return errorInfo;
-    // let statusCode = 200;
-    // let errorCode;
-    // let errorMsg = '';
-
-    // switch (type) {
-    //     case errorType.REQUIRED:
-    //         statusCode = 400;
-    //         errorCode = 1002;
-    //         errorMsg = `${source} required`;
-    //         break;
-    //     case errorType.NOTVALID:
-    //         statusCode = 400;
-    //         errorCode = 1001;
-    //         errorMsg = `${source} is not valid`;
-    //         break;
-    //     case errorType.TYPEERR:
-    //         statusCode = 400;
-    //         errorCode = 1003;
-    //         errorMsg = `${source} type error`;
-    //         break;
-    // }
-    // return {
-    //     statusCode,
-    //     errorCode,
-    //     errorMsg
-    // }
+    return errorType[type] ? errorType[type] : {
+        errorCode: 9999,
+        errorMessage: msg ? msg: `unknow error`,
+        statusCode: 500
+    };
 };
 
 function handleMongooError(err, res, source) {
     let errorInfo; 
+    const detailErrors = err.errors;
 
     if (err && err.kind) {
-        errorInfo = getErrorInfo(err.kind, err.path);
-    } else if (err.errors) {
-        for(let errName in err.errors) {
-            errorInfo = getErrorInfo(err.errors[errName].kind, errName); 
+        errorInfo = getErrorInfo(err.kind, err.path, err.message);
+    } else if (detailErrors) {
+        for(let errName in detailErrors) {
+            if(detailErrors.hasOwnProperty(errName)) {
+                errorInfo = getErrorInfo(detailErrors[errName].kind, errName, detailErrors[errName].message);
+            }
         }
     } else {
         // custom error
         errorInfo = {
             statusCode: 400,
             errorCode: 1001,
-            errorMsg: err.message
+            errorMessage: err.message
         }
     }
-    reportError(errorInfo.statusCode, errorInfo.errorCode, errorInfo.errorMsg, res);
+    reportError(errorInfo.statusCode, errorInfo.errorCode, errorInfo.errorMessage, res);
 };
     
 function throwIfMissing(param) {
@@ -140,8 +70,13 @@ function throwIfMissing(param) {
 };
         
 function validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
+    var regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regEx.test(email);
+}
+
+function validatePhoneNo(phone) {
+    var regEx = /[\d]{3}-[\d]{3}-[\d]{4}/;
+    return regEx.test(phone);
 }
 
 module.exports = {

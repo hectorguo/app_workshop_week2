@@ -5,6 +5,7 @@ const router = express.Router();
 
 const Driver = require('../models/driver');
 const Car = require('../models/car');
+const PayAccount = require('../models/paymentAccount');
 
 const utils = require('../utils');
 const ModelHandle = require('./factory');
@@ -12,6 +13,7 @@ const ModelHandle = require('./factory');
 
 const driverHandle = new ModelHandle(Driver, 'Driver');
 const carHandle = new ModelHandle(Car, 'Car');
+const accountHandle = new ModelHandle(PayAccount, 'Payment Account');
 
 router.route('/drivers')
     /**
@@ -95,7 +97,7 @@ router.route('/drivers/:driver_id')
 
 router.route('/drivers/:driver_id/cars')
     .get((req, res) => {
-        Car.findOne({driver: req.params.driver_id}, (err, car) => {
+        Car.find({driver: req.params.driver_id}, (err, cars) => {
             if(err) {
                 utils.handleMongooError(err, res);
                 return;
@@ -108,6 +110,38 @@ router.route('/drivers/:driver_id/cars')
             .then((driver) => {
                 req.body.driver = driver._id;
                 return carHandle.create(req.body);
+            })
+            then((response) => {
+                res.json(response);
+            })
+            .catch((err) => {
+                utils.handleMongooError(err, res);
+            });
+    });
+
+router.route('/drivers/:driver_id/paymentaccounts')
+    .get((req, res) => {
+        PayAccount.find({driver_id: req.params.driver_id}, (err, account) => {
+            if(err) {
+                utils.handleMongooError(err, res);
+                return;
+            }
+            res.status(200).json(account);
+        })
+    })
+    .post((req, res) => {
+        if(!req.body.bank) {
+            utils.handleMongooError({
+                kind: 'required',
+                path: req.path,
+                message: 'bank required'
+            }, res);
+            return;
+        }
+        driverHandle.get(req.params.driver_id)
+            .then((driver) => {
+                req.body.driver = driver._id;
+                return accountHandle.create(req.body);
             })
             then((response) => {
                 res.json(response);

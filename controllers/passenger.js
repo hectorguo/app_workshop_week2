@@ -4,12 +4,13 @@ const express = require('express');
 const router = express.Router();
 
 const Passenger = require('../models/passenger');
+const PayAccount = require('../models/paymentAccount');
 const utils = require('../utils');
 const ModelHandle = require('./factory');
 
 
 const passengerHandle = new ModelHandle(Passenger, 'Passenger');
-
+const accountHandle = new ModelHandle(PayAccount, 'Payment Account');
 
 router.route('/passengers')
     /**
@@ -90,4 +91,35 @@ router.route('/passengers/:passenger_id')
             })
     });
 
+router.route('/passengers/:passenger_id/paymentaccounts')
+    .get((req, res) => {
+        PayAccount.find({passenger_id: req.params.passenger_id}, (err, account) => {
+            if(err) {
+                utils.handleMongooError(err, res);
+                return;
+            }
+            res.status(200).json(account);
+        })
+    })
+    .post((req, res) => {
+        if(!req.body.expirationDate) {
+            utils.handleMongooError({
+                kind: 'required',
+                path: req.path,
+                message: 'expirationDate required'
+            }, res);
+            return;
+        }
+        passengerHandle.get(req.params.passenger_id)
+            .then((driver) => {
+                req.body.driver = driver._id;
+                return accountHandle.create(req.body);
+            })
+            then((response) => {
+                res.json(response);
+            })
+            .catch((err) => {
+                utils.handleMongooError(err, res);
+            });
+    });
 module.exports = router;

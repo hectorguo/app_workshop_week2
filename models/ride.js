@@ -29,13 +29,29 @@ var RideSchema = new Schema({
             type: 'notvalid'
         }]
     },
-    startPoint: [Number], // [<longitude>, <latitude>]
-    endPoint: [Number], // [<longitude>, <latitude>]
-    requestTime: Number,
-    pickupTime: Number,
-    dropOffTime: Number,
+    startPoint: {
+        type: Schema.Types.Mixed,
+        required: true
+    }, // [<longitude>, <latitude>]
+    endPoint: {
+        type: Schema.Types.Mixed,
+        required: true
+    },
+    requestTime: {
+        type: Number,
+        required: true
+    },
+    pickupTime: {
+        type: Number,
+        required: true
+    },
+    dropOffTime: {
+        type: Number,
+        required: true
+    },
     status: {
         type: String,
+        required: true,
         validate: [{
             validator: function (val) {
                 const validVal = ['REQUESTED', 'AWAITING_DRIVER', 'DRIVE_ASSIGNED', 'IN_PROGRESS', 'ARRIVED', 'CLOSED'];
@@ -46,7 +62,7 @@ var RideSchema = new Schema({
         }]
     },
     fare: Number,
-    route: []
+    route: [{lat: Number, long: Number}]
 });
 
 module.exports = mongoose.model('Ride', RideSchema);
