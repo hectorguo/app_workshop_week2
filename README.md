@@ -12,12 +12,14 @@ npm install
 npm run server
 ```
 
-## Release 1.0.0 (Sep 22):
+## Release 1.0.2 (Oct 2):
+
+- Modifying schema to adapt for new requirements;
+- Refactoring error handling utils;
+- Add new subsource for drivers and passengers: `/drivers/:driver_id/paymentaccounts` and `/passengers/:passenger_id/paymentaccounts`
 
 ### Hours Spent
-- Design: 2 hours;
-- Implement: 3.5 hours;
-- Unit Test coding: 2 hours;
+- Implement: 2 hours;
 
 
 ## Release 1.0.1 (Sep 29):
@@ -128,3 +130,10 @@ _paymentAccount_
 - expirationDate (optional, for passenger accounts only)
 - nameOnAccount
 - bank (optional, for driver accounts only)
+
+## Release 1.0.0 (Sep 22):
+
+### Hours Spent
+- Design: 2 hours;
+- Implement: 3.5 hours;
+- Unit Test coding: 2 hours;
