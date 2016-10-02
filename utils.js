@@ -6,7 +6,9 @@ function reportError(statusCode, errorCode, errorMessage, res) {
         201: 'Created',
         204: 'No Content',
         400: 'Bad Request',
-        404: 'Not Found'
+        404: 'Not Found',
+        500: 'Internal Error',
+        501: 'Not implemented'
     };
 
     res
@@ -31,7 +33,7 @@ function getErrorInfo(type, source, msg) {
         'notValidAttr': {errorCode: 1006, statusCode: 400, errorMessage: msg ? msg: `attribute ${source} is not valid` },
         'noId': {errorCode: 1007, statusCode: 400, errorMessage: msg ? msg: 'Id should not be provided' },
         'duplicated': {errorCode: 1008, statusCode: 400, errorMessage: msg ? msg: `${source} duplicated` },
-        'notUnique': {errorCode: 1009, statusCode: 400, errorMessage: msg ? msg: `${source} is not unique` },
+        'user defined': {errorCode: 1009, statusCode: 400, errorMessage: msg ? msg: `${source} is not unique` },
         'ObjectId': {errorCode: 1010, statusCode: 400, errorMessage: msg ? msg: `resouce ${source} not found`}
     };
 
@@ -83,5 +85,6 @@ module.exports = {
     reportError,
     handleMongooError,
     throwIfMissing,
-    validateEmail
+    validateEmail,
+    validatePhoneNo
 }

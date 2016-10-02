@@ -1,7 +1,8 @@
 'use strict';
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const mongooseHidden = require('mongoose-hidden')();
+const mongooseHidden = require('mongoose-hidden')({ defaultHidden: { password: true, __v: true } });
+const uniqueValidator = require('mongoose-unique-validator');
 
 const utils = require('../utils');
 
@@ -19,13 +20,14 @@ const PassengerSchema = new Schema({
     },
     password: {
         type: String,
-        hide: true,
+        // hide: true,
         required: true,
         minlength: 8,
         maxlength: 16
     },
     emailAddress: {
         type: String,
+        unique: true,
         validate: [{
             validator: utils.validateEmail,
             msg: 'email address is invaild',
@@ -70,5 +72,6 @@ const PassengerSchema = new Schema({
 });
 
 PassengerSchema.plugin(mongooseHidden);
+PassengerSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('Passenger', PassengerSchema);

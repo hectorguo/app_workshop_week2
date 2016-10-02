@@ -1,7 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const mongooseHidden = require('mongoose-hidden')();
+const mongooseHidden = require('mongoose-hidden')({ defaultHidden: { password: true, __v: true } });
 
 const utils = require('../utils');
 
@@ -19,13 +19,14 @@ const DriverSchema = new Schema({
     },
     password: {
         type: String,
-        hide: true,
+        // hide: true,
         required: true,
         minlength: 8,
         maxlength: 16
     },
     emailAddress: {
         type: String,
+        unique: true,
         validate: [{
             validator: utils.validateEmail,
             msg: 'email address is invaild',

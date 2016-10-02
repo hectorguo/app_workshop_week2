@@ -2,6 +2,11 @@
 
 const utils = require('../utils'); 
 
+/**
+ * CRUD factory (used for handling models)
+ * param model {Object} mongoose schema
+ * param name {String} model's name
+ */
 class ModelHandle {
     constructor(model, name) {
         this.model = model;
@@ -55,7 +60,7 @@ class ModelHandle {
                     reject(err);
                     // res.status(500).send(err);
                 } else {
-                    resolve({ "message": `${this.name} Created`, "created": model });
+                    resolve({ "message": `New ${this.name} Created`, "created": model });
                     // res.status(201).json();
                 }
             });

@@ -102,7 +102,7 @@ router.route('/drivers/:driver_id/cars')
                 utils.handleMongooError(err, res);
                 return;
             }
-            res.status(200).json(car);
+            res.status(200).json(cars);
         })
     })
     .post((req, res) => {
@@ -111,7 +111,7 @@ router.route('/drivers/:driver_id/cars')
                 req.body.driver = driver._id;
                 return carHandle.create(req.body);
             })
-            then((response) => {
+            .then((response) => {
                 res.json(response);
             })
             .catch((err) => {
