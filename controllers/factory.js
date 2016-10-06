@@ -27,6 +27,11 @@ class ModelHandle {
             Model.findById(id, (err, item) => {
                 if (err) {
                     reject(err);
+                } else if (!item) {
+                    reject({
+                        kind:'ObjectId',
+                        path: this.name
+                    })
                 } else {
                     resolve(item);
                 }
@@ -60,7 +65,7 @@ class ModelHandle {
                     reject(err);
                     // res.status(500).send(err);
                 } else {
-                    resolve({ "message": `New ${this.name} Created`, "created": model });
+                    resolve(Object.assign({ "message": `New ${this.name} Created`}, model._doc));
                     // res.status(201).json();
                 }
             });
@@ -82,7 +87,7 @@ class ModelHandle {
                         if (err) {
                             reject(err);
                         }
-                        resolve({ "message": `${this.name} Created`, "created": model });
+                        resolve(Object.assign({ "message": `${this.name} Updated`}, model._doc));
                     });
                 })
                 .catch((err) => {

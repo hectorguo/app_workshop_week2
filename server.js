@@ -44,13 +44,15 @@ app.use('/api', passenger);
 app.use('/api', paymentAccount);
 app.use('/api', ride);
 
+app.use('/test', express.static('test/browser'));
+
 // invalid resource
 app.use((req, res, next) => {
     utils.reportError(404, 1001, 'resource not found', res);
     next();
 });
 
-app.use('/test', express.static('test/browser'));
+
 
 // START THE SERVER
 // =============================================================================

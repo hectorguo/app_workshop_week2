@@ -16,8 +16,6 @@
   },
   "scripts": {
     "server": "node server.js",
-    "test": "npm run test-node && npm run test-browser",
-    "test-node": "mocha -R spec ./test/test.js",
-    "test-browser": "mocha-phantomjs ./test/browser/index.html"
+    "test": "mocha -u exports test"
   }
 }

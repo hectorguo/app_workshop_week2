@@ -34,13 +34,15 @@ function getErrorInfo(type, source, msg) {
         'noId': {errorCode: 1007, statusCode: 400, errorMessage: msg ? msg: 'Id should not be provided' },
         'duplicated': {errorCode: 1008, statusCode: 400, errorMessage: msg ? msg: `${source} duplicated` },
         'user defined': {errorCode: 1009, statusCode: 400, errorMessage: msg ? msg: `${source} is not unique` },
-        'ObjectId': {errorCode: 1010, statusCode: 400, errorMessage: msg ? msg: `resouce ${source} not found`}
+        'ObjectId': {errorCode: 1010, statusCode: 404, errorMessage: msg ? msg: `resouce ${source} not found`},
+        'maxlength': {errorCode: 1001, statusCode: 400, errorMessage: msg ? msg: `longer than the maximum allowed length`},
+        'minlength': {errorCode: 1001, statusCode: 400, errorMessage: msg ? msg: `shorter than the minimum allowed length`},
     };
 
     return errorType[type] ? errorType[type] : {
         errorCode: 9999,
         errorMessage: msg ? msg: `unknow error`,
-        statusCode: 500
+        statusCode: 400
     };
 };
 

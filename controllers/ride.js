@@ -90,4 +90,24 @@ router.route('/rides/:ride_id')
             })
     });
 
+router.route('/rides/:ride_id/routePoints')
+    .post((req, res) => {
+        rideHandle.get(req.params.ride_id)
+            .then((ride) => {
+                ride.push({ lat: req.body.lat, long: req.body.long });
+                ride.save((err) => {
+                    if (err) {
+                        utils.handleMongooError(err, res);
+                    }
+                    res.json({ msg: 'route points created', routePoints: ride.route })
+                });
+            })
+    })
+    .get((req, res) => {
+        rideHandle.get(req.params.ride_id)
+            .then((ride) => {
+                res.json(ride.route);
+            });
+    })
+
 module.exports = router;

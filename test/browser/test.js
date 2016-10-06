@@ -46,19 +46,156 @@ function del(url, params) {
         .then(res => res.json());
 }
 
+const driverOne = {
+  firstName: "John",
+  lastName: "Smith",
+  emailAddress: "test-98989@example.com",
+  password: "anypwd",
+  addressLine1: "454 Main Street",
+  addressLine2: "",
+  city: "Anytown",
+  state: "AS",
+  zip: "83874",
+  phoneNumber: "408-555-2737",
+  drivingLicense: "D162373",
+  licensedState: "CA"
+};
+
+
+var driverOneId;
+
+it('drivers01_should_create_driver', (done) => {
+    post('/api/drivers', params)
+        .then((res) => {
+            
+        })
+}); function(done){
+  supertest(app)
+  .
+  .send(driverOne)
+  .expect(201)
+  .end(function(err, response){
+//    console.log(err);
+//    console.log(response.body);
+    assert.ok(typeof response.body === 'object');
+    driverOneId = response.body._id;
+    return done();
+  });
+};
+
+it('drivers02_should_get_driver', (done) => {
+
+}); function(done){
+  supertest(app)
+      .get('/api/drivers/' + driverOneId)
+      .expect(200)
+      .end(function(err, response){
+//        console.log(err);
+//        console.log(response.body);
+          assert.ok(response.statusCode == 200);
+        assert.ok(typeof response.body === 'object');
+        return done();
+      });
+};
+
+
+it('drivers03_should_delete_driver', (done) => {
+
+}); function(done){
+  supertest(app)
+      .delete('/api/drivers/' + driverOneId)
+      .expect(200)
+      .end(function(err, response){
+//        console.log(err);
+//        console.log(response.body);
+//        assert.ok(typeof response.body === 'object');
+          assert.ok(response.statusCode == 200);
+        return done();
+      });
+};
+
+it('drivers04_should_not_get_deleted_driver', (done) => {
+
+}); function(done){
+    supertest(app)
+        .get('/api/drivers/' + driverOneId)
+        .expect(404)
+        .end(function(err, response){
+//        console.log(err);
+//        console.log(response);
+            assert.ok(response.statusCode == 404);
+//            assert.ok(typeof response.body === 'object');
+            return done();
+        });
+};
+
+it('drivers05_should_not_get_random_id_driver', (done) => {
+
+}); function(done){
+    supertest(app)
+        .get('/api/drivers/7383883373838')
+        .expect(404)
+        .end(function(err, response){
+//        console.log(err);
+//        console.log(response);
+//            assert.ok(typeof response.body === 'object');
+            assert.ok(response.statusCode == 404);
+            return done();
+        });
+};
+
+
+it('drivers06_should_not_create_driver_missing_email_address', (done) => {
+
+}); function(done){
+    delete driverOne.emailAddress;
+    supertest(app)
+        .post('/api/drivers')
+        .send(driverOne)
+        .expect(400)
+        .end(function(err, response){
+//    console.log(err);
+//    console.log(response.body);
+            assert.ok(response.statusCode == 400);
+            assert.ok(typeof response.body === 'object');
+//            driverOneId = response.body._id;
+            return done();
+        });
+};
+
+it('drivers07_should_not_create_driver_with_long_first_name', (done) => {
+
+}); function(done){
+    driverOne.firstName = "1234567890123456";
+    driverOne.emailAddress = 'test7383738983@example.com';
+    supertest(app)
+        .post('/api/drivers')
+        .send(driverOne)
+        .expect(400)
+        .end(function(err, response){
+//    console.log(err);
+//    console.log(response.body);
+            assert.ok(response.statusCode == 400);
+            assert.ok(typeof response.body === 'object');
+//            driverOneId = response.body._id;
+            return done();
+        });
+};
+
+
 describe('Driver', () => {
-    describe('GET /api/driver', () => {
+    describe('GET /api/drivers', () => {
         it('should return all drivers', (done) => {
-            get('/api/driver')
+            get('/api/drivers')
                 .then((res) => {
                     expect(res).to.be.a('array');
                     done();
                 });
         });
     });
-    describe('GET /api/driver/:id', () => {
+    describe('GET /api/drivers/:id', () => {
         it('should return 200 OK (first_name: AABB)', (done) => {
-            get('/api/driver/d_1')
+            get('/api/drivers/d_1')
                 .then((res) => {
                     expect(res.first_name).to.be('AABB');
                     done();
@@ -66,7 +203,7 @@ describe('Driver', () => {
         });
 
         it('should return 404', (done) => {
-            get('/api/driver/d_xxx')
+            get('/api/drivers/d_xxx')
                 .then((res) => {
                     expect(res.status).to.be(404);
                     done();
@@ -74,9 +211,9 @@ describe('Driver', () => {
         });
     });
     
-    describe('POST /api/driver', function() {
+    describe('POST /api/drivers', function() {
         it('should return 201', function(done) {
-            post('/api/driver', {
+            post('/api/drivers', {
                 "first_name": "Hector",
                 "last_name": "Guo",
                 "email": "zzz@xx.com",
@@ -88,7 +225,7 @@ describe('Driver', () => {
             });
         });
         it('should return first_name required', function(done) {
-            post('/api/driver', {
+            post('/api/drivers', {
                 "last_name": "Guo",
                 "email": "zzz@xx.com",
                 "phone_number": "6503334444"
@@ -100,9 +237,9 @@ describe('Driver', () => {
         });
     });
 
-    describe('PATCH /api/driver/d_1', () => {
+    describe('PATCH /api/drivers/d_1', () => {
         it('should return 201', (done) => {
-            patch('/api/driver/d_1', {
+            patch('/api/drivers/d_1', {
                 "first_name": "AABB",
                 "phone_number": "6503334444"
             })
@@ -112,7 +249,7 @@ describe('Driver', () => {
             });
         });
         it('should return first_name required', (done) => {
-            patch('/api/driver/d_xx1', {
+            patch('/api/drivers/d_xx1', {
                 "last_name": "Guo",
                 "email": "zzz@xx.com",
                 "phone_number": "6503334444"
@@ -128,7 +265,7 @@ describe('Driver', () => {
 describe('Car (sub resource)', () => {
     describe('Get car by driver_id', () => {
         it('should return a car info', (done) => {
-            get('/api/driver/d_1/car')
+            get('/api/drivers/d_1/car')
             .then((res) => {
                 expect(res).to.be.a('object');
                 done();
@@ -137,7 +274,7 @@ describe('Car (sub resource)', () => {
     });
     describe('Create car in a driver (override old info if exist)', () => {
         it('should return a car_id', (done) => {
-            post('/api/driver/d_1/car', {
+            post('/api/drivers/d_1/car', {
                 "model": "Model E",
                 "made": "Tesla",
                 "door_number": 4,
@@ -152,13 +289,13 @@ describe('Car (sub resource)', () => {
     });
     describe('Update car by driver_id', () => {
         it('should return no content', (done) => {
-            post('/api/driver/d_1/car', {
+            post('/api/drivers/d_1/car', {
                 "color": "white"
             })
             .then((res) => {
                 expect(res).to.have.key('car_id');
             })
-            .then(() => get('/api/driver/d_1/car'))
+            .then(() => get('/api/drivers/d_1/car'))
             .then((res) => {
                 expect(res.color).to.be('white');
             });
@@ -166,7 +303,7 @@ describe('Car (sub resource)', () => {
     });
     describe('Remove car by driver_id', () => {
         it('should return no content', (done) => {
-            del('/api/driver/d_1/car')
+            del('/api/drivers/d_1/car')
             .then((res) => {
                 expect(res).to.have.key('msg');
             });
@@ -177,14 +314,14 @@ describe('Car (sub resource)', () => {
 describe('Passenger', () => {
     describe('Get passenger', () => {
         it('should return all passengers', (done) => {
-            get('/api/passenger')
+            get('/api/passengers')
             .then((res) => {
                 expect(res).to.be.an('array');
                 done();
             });
         });
         it('should return one passenger', (done) => {
-            get('/api/passenger/p_1')
+            get('/api/passengers/p_1')
             .then((res) => {
                 expect(res).to.be.an('object');
                 done();
@@ -193,7 +330,7 @@ describe('Passenger', () => {
     });
     describe('Create passenger', () => {
         it('should return a passenger_id', (done) => {
-            post('/api/passenger', {
+            post('/api/passengers', {
                 "first_name": "hector",
                 "last_name": "Guo",
                 "email": "zzz@xx.com",
@@ -207,7 +344,7 @@ describe('Passenger', () => {
     });
     describe('Update passenger', () => {
         it('should return 204 no content', (done) => {
-            patch('/api/passenger/p_1', {
+            patch('/api/passengers/p_1', {
                 "email": "zzz@xxx.com",
                 "phone_number": "6503334444"
             })
@@ -219,7 +356,7 @@ describe('Passenger', () => {
     });
     describe('Remove passenger', () => {
         it('should return 200 OK', (done) => {
-            del('/api/passenger/p_1')
+            del('/api/passengers/p_1')
             .then((res) => {
                 expect(res).to.be.an('object');
                 done();

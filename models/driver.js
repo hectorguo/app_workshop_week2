@@ -21,11 +21,12 @@ const DriverSchema = new Schema({
         type: String,
         // hide: true,
         required: true,
-        minlength: 8,
+        minlength: 6,
         maxlength: 16
     },
     emailAddress: {
         type: String,
+        required: true,
         unique: true,
         validate: [{
             validator: utils.validateEmail,
@@ -71,7 +72,7 @@ const DriverSchema = new Schema({
     drivingLicense: {
         type: String,
         required: true,
-        minlength: 8,
+        minlength: 6,
         maxlength: 16
     },
     licensedState: {
