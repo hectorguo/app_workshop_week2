@@ -32,7 +32,7 @@ var RideSchema = new Schema({
     startPoint: {
         type: Schema.Types.Mixed,
         required: true
-    }, // [<longitude>, <latitude>]
+    }, // {lat: <longitude>, long: <latitude>}
     endPoint: {
         type: Schema.Types.Mixed,
         required: true

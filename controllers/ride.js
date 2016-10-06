@@ -92,22 +92,47 @@ router.route('/rides/:ride_id')
 
 router.route('/rides/:ride_id/routePoints')
     .post((req, res) => {
-        rideHandle.get(req.params.ride_id)
-            .then((ride) => {
-                ride.push({ lat: req.body.lat, long: req.body.long });
-                ride.save((err) => {
-                    if (err) {
-                        utils.handleMongooError(err, res);
-                    }
-                    res.json({ msg: 'route points created', routePoints: ride.route })
-                });
-            })
+        rideHandle.model.findByIdAndUpdate(
+            req.params.ride_id,
+            {$push: {"route": { lat: req.body.lat, long: req.body.long }}},
+            {safe: true, upsert: true, new : true},
+            (err, ride) => {
+                if (err) {
+                    utils.handleMongooError(err, res);
+                }
+                res.json({ msg: 'route points created', routePoints: ride.route })
+            });
+        // rideHandle.get(req.params.ride_id)
+        //     .then((ride) => {
+        //         ride.route.push({ lat: req.body.lat, long: req.body.long });
+        //         ride.save((err) => {
+        //             if (err) {
+        //                 utils.handleMongooError(err, res);
+        //             }
+        //             res.json({ msg: 'route points created', routePoints: ride.route })
+        //         });
+        //     })
     })
     .get((req, res) => {
         rideHandle.get(req.params.ride_id)
             .then((ride) => {
                 res.json(ride.route);
             });
+    });
+
+router.route('/rides/:ride_id/routePoints/current')
+    .get((req, res) => {
+        rideHandle.model.findById(req.params.ride_id)
+            .select({ "route": { "$slice": -1 }})
+            .exec((err, ride) => {
+                if (err) {
+                    utils.handleMongooError(err, res);
+                }
+                res.json(ride.route);
+            })
+    // rideHandle.get(req.params.ride_id).then((ride) => {
+    //     res.json(ride.route[ride.route.length - 1]);
+    // });
     })
 
 module.exports = router;

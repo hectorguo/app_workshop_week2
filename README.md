@@ -12,6 +12,11 @@ npm install
 npm run server
 ```
 
+## Release 1.0.3 (Oct 5):
+
+- Add test cases;
+- Add ride actions;
+
 ## Release 1.0.2 (Oct 2):
 
 - Modifying schema to adapt for new requirements;
