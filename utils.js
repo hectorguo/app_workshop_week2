@@ -1,11 +1,24 @@
 'use strict';
 
+const conf = require('./config');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+/**
+ * report error with http standard
+ * 
+ * @param {any} statusCode
+ * @param {any} errorCode
+ * @param {any} errorMessage
+ * @param {any} res Express's response object
+ */
 function reportError(statusCode, errorCode, errorMessage, res) {
     const statusMsg = {
         200: 'OK',
         201: 'Created',
         204: 'No Content',
         400: 'Bad Request',
+        403: 'Forbidden',
         404: 'Not Found',
         500: 'Internal Error',
         501: 'Not implemented'
@@ -23,6 +36,19 @@ function reportError(statusCode, errorCode, errorMessage, res) {
         .end();
 }
 
+/**
+ * get a standard error info
+ * 
+ * @param {string} type Mongoose's error type
+ * @param {any} source
+ * @param {any} msg
+ * @returns 
+ * {
+ *  errorCode: Number
+ *  errorMessage: String
+ *  statusCode: Number
+ * }
+ */
 function getErrorInfo(type, source, msg) {
     const errorType = {
         'notvalid': {errorCode: 1001, statusCode: 500, errorMessage: msg ? msg: `${source} is not valid` },
@@ -83,10 +109,96 @@ function validatePhoneNo(phone) {
     return regEx.test(phone);
 }
 
+/**
+ * hash passord for saving in database
+ * 
+ * @param {string} plainPassword
+ * @returns Promise Object
+ */
+function hashPassword(plainPassword) {
+    return new Promise((resolve, reject) => {
+        const saltRounds = 5;
+        bcrypt.hash(plainPassword, saltRounds, (err, hash) => {
+            if(err) {
+                reject(err);
+            }
+            resolve(hash);
+        });
+    });
+}
+
+/**
+ * veirty password with hash
+ * 
+ * @param {string} plainPasword
+ * @param {string} hash
+ * @returns Promise Object
+ */
+function verifyPassword(plainPasword, hash) {
+    return new Promise((resolve, reject) => {
+        bcrypt.compare(plainPasword, hash, (err, isEqual) => {
+            if(err) {
+                reject(err);
+            }
+            if(!isEqual) {
+                reject({result: isEqual, message: 'wrong password'})
+            }
+            resolve(hash);
+        });
+    });
+}
+
+/**
+ * Generate token by user's name and password
+ * 
+ * @param {object} user 
+ * {
+ * username: 'hectorguo',
+ * password: '12345'
+ * }
+ * @param {object} options jwt options
+ * @returns Promise Object
+ */
+function signUser(user, options) {
+    return new Promise((resolve, reject) => {
+        const secret = conf.secret;
+        jwt.sign(user, secret, options, (err, token) => {
+            if(err) {
+                reject(err);
+            }
+            resolve(token);
+        });
+    });
+
+}
+
+/**
+ * verify token
+ * 
+ * @param {string} token
+ * @returns Promise object
+ */
+function verifyUser(token) {
+    return new Promise((resolve, reject) => {
+        const secret = conf.secret;
+        jwt.verify(token, secret, (err, decoded) => {
+            if(err) {
+                reject(err);
+            }
+            resolve(decoded);
+        });
+
+    });
+}
+
 module.exports = {
     reportError,
     handleMongooError,
     throwIfMissing,
     validateEmail,
-    validatePhoneNo
+    validatePhoneNo,
+    hashPassword,
+    verifyPassword,
+    verifyUser,
+    signUser,
 }

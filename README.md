@@ -12,6 +12,11 @@ npm install
 npm run server
 ```
 
+## Release 1.0.4 (Oct 13):
+
+- Add authentication;
+
+
 ## Release 1.0.3 (Oct 5):
 
 - Add test cases;
@@ -68,7 +73,7 @@ Error Code  | Error Message    | Relevant Resources  | Parameters
 1008 | Duplication Attribute | All Resources | None
 1009 | {0} not unique | All Resources | `0 - Attribute Name`
 1010 | {0} resouce not found | All Resources | `0 - ObjectId`
-
+1011 | Authentication error | All Resources | None
 ----
 
 **Entities**

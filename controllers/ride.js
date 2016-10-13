@@ -99,6 +99,7 @@ router.route('/rides/:ride_id/routePoints')
             (err, ride) => {
                 if (err) {
                     utils.handleMongooError(err, res);
+                    return;
                 }
                 res.json({ msg: 'route points created', routePoints: ride.route })
             });
@@ -127,6 +128,7 @@ router.route('/rides/:ride_id/routePoints/current')
             .exec((err, ride) => {
                 if (err) {
                     utils.handleMongooError(err, res);
+                    return;
                 }
                 res.json(ride.route);
             })
