@@ -7,10 +7,10 @@ const jwt = require('jsonwebtoken');
 /**
  * report error with http standard
  * 
- * @param {any} statusCode
- * @param {any} errorCode
- * @param {any} errorMessage
- * @param {any} res Express's response object
+ * @param {Number} statusCode
+ * @param {Number} errorCode
+ * @param {String} errorMessage
+ * @param {Object} res Express's response object
  */
 function reportError(statusCode, errorCode, errorMessage, res) {
     const statusMsg = {
@@ -39,9 +39,9 @@ function reportError(statusCode, errorCode, errorMessage, res) {
 /**
  * get a standard error info
  * 
- * @param {string} type Mongoose's error type
- * @param {any} source
- * @param {any} msg
+ * @param {String} type Mongoose's error type
+ * @param {String} source
+ * @param {String} msg
  * @returns 
  * {
  *  errorCode: Number
@@ -72,6 +72,13 @@ function getErrorInfo(type, source, msg) {
     };
 };
 
+/**
+ * report error message based on Mongoose error object
+ * 
+ * @param {Object} err - Mongoose Error
+ * @param {Object} res - express response object
+ * @param {String} source - Source Name
+ */
 function handleMongooError(err, res, source) {
     let errorInfo; 
     const detailErrors = err.errors;

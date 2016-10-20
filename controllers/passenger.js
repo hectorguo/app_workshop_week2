@@ -16,7 +16,7 @@ router.route('/passengers')
     /**
      * GET call for the passenger entity (multiple).
      * @returns {object} A list of passengers. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .get((req, res) => {
         passengerHandle.get()
@@ -31,7 +31,7 @@ router.route('/passengers')
      * POST call for the passenger entity.
      * @param {string} license - The license plate of the new passenger
      * @returns {object} A message and the passenger created. (201 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .post((req, res) => {
         passengerHandle.create(req.body)
@@ -51,7 +51,7 @@ router.route('/passengers/:passenger_id')
     /**
      * GET call for the passenger entity (single).
      * @returns {object} the passenger with Id passenger_id. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .get(function (req, res) {
         passengerHandle.get(req.params.passenger_id)
@@ -65,7 +65,7 @@ router.route('/passengers/:passenger_id')
     /**
      * PATCH call for the passenger entity (single).
      * @returns {object} A message and the passenger updated. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .patch(function (req, res) {
         passengerHandle.update(req.params.passenger_id, req.body)
@@ -79,7 +79,7 @@ router.route('/passengers/:passenger_id')
     /**
      * DELETE call for the passenger entity (single).
      * @returns {object} A string message. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .delete(function (req, res) {
         passengerHandle.del(req.params.passenger_id)

@@ -10,12 +10,11 @@ const ModelHandle = require('./factory');
 
 const rideHandle = new ModelHandle(Ride, 'Ride');
 
-
 router.route('/rides')
     /**
      * GET call for the ride entity (multiple).
      * @returns {object} A list of rides. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .get((req, res) => {
         rideHandle.get()
@@ -30,7 +29,7 @@ router.route('/rides')
      * POST call for the ride entity.
      * @param {string} license - The license plate of the new ride
      * @returns {object} A message and the ride created. (201 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .post((req, res) => {
         rideHandle.create(req.body)
@@ -50,7 +49,7 @@ router.route('/rides/:ride_id')
     /**
      * GET call for the ride entity (single).
      * @returns {object} the ride with Id ride_id. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .get(function (req, res) {
         rideHandle.get(req.params.ride_id)
@@ -64,7 +63,7 @@ router.route('/rides/:ride_id')
     /**
      * PATCH call for the ride entity (single).
      * @returns {object} A message and the ride updated. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .patch(function (req, res) {
         rideHandle.update(req.params.ride_id, req.body)
@@ -78,7 +77,7 @@ router.route('/rides/:ride_id')
     /**
      * DELETE call for the ride entity (single).
      * @returns {object} A string message. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .delete(function (req, res) {
         rideHandle.del(req.params.ride_id)
@@ -103,16 +102,6 @@ router.route('/rides/:ride_id/routePoints')
                 }
                 res.json({ msg: 'route points created', routePoints: ride.route })
             });
-        // rideHandle.get(req.params.ride_id)
-        //     .then((ride) => {
-        //         ride.route.push({ lat: req.body.lat, long: req.body.long });
-        //         ride.save((err) => {
-        //             if (err) {
-        //                 utils.handleMongooError(err, res);
-        //             }
-        //             res.json({ msg: 'route points created', routePoints: ride.route })
-        //         });
-        //     })
     })
     .get((req, res) => {
         rideHandle.get(req.params.ride_id)
@@ -132,9 +121,6 @@ router.route('/rides/:ride_id/routePoints/current')
                 }
                 res.json(ride.route);
             })
-    // rideHandle.get(req.params.ride_id).then((ride) => {
-    //     res.json(ride.route[ride.route.length - 1]);
-    // });
     })
 
 module.exports = router;

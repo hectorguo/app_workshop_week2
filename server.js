@@ -1,13 +1,9 @@
-// server.js
-
-// BASIC SETUP
-// =============================================================================
 'use strict';
 // call the packages we need
 const express = require('express');        // call express
 const app = express();                 // define our app using express
 const bodyParser = require('body-parser');
-const open = require('open');
+// const open = require('open');
 
 const mongoose = require('mongoose');
 const conf = require('./config');
@@ -34,11 +30,6 @@ const paymentAccount = require('./controllers/paymentAccount');
 const ride = require('./controllers/ride');
 const session = require('./controllers/session');
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function (req, res) {
-    res.json({ message: 'hooray! welcome to APP Workshop Week 2!' });
-});
-
 // setup and sessions router do not need to verify token
 app.use('/api', session);
 
@@ -60,12 +51,14 @@ app.use((req, res, next) => {
         });
 });
 
+// router for entities
 app.use('/api', car);
 app.use('/api', driver);
 app.use('/api', passenger);
 app.use('/api', paymentAccount);
 app.use('/api', ride);
 
+// router for browser test
 app.use('/test', express.static('test/browser'));
 
 // handle 404 resource

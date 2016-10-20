@@ -20,7 +20,7 @@ router.route('/cars')
     /**
      * GET call for the car entity (multiple).
      * @returns {object} A list of cars. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .get((req, res) => {
         carHandle.get()
@@ -35,7 +35,7 @@ router.route('/cars')
      * POST call for the car entity.
      * @param {string} license - The license plate of the new car
      * @returns {object} A message and the car created. (201 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .post((req, res) => {
         carHandle.create(req.body)
@@ -55,7 +55,7 @@ router.route('/cars/:car_id')
     /**
      * GET call for the car entity (single).
      * @returns {object} the car with Id car_id. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .get(function (req, res) {
         carHandle.get(req.params.car_id)
@@ -69,7 +69,7 @@ router.route('/cars/:car_id')
     /**
      * PATCH call for the car entity (single).
      * @returns {object} A message and the car updated. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .patch(function (req, res) {
         carHandle.update(req.params.car_id, req.body)
@@ -83,7 +83,7 @@ router.route('/cars/:car_id')
     /**
      * DELETE call for the car entity (single).
      * @returns {object} A string message. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .delete(function (req, res) {
         carHandle.del(req.params.car_id)

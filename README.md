@@ -12,6 +12,10 @@ npm install
 npm run server
 ```
 
+## Release 1.0.5 (Oct 19):
+
+- Clean up useless code and comments; 
+
 ## Release 1.0.4 (Oct 13):
 
 - Add authentication;

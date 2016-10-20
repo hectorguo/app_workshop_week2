@@ -19,7 +19,7 @@ router.route('/drivers')
     /**
      * GET call for the driver entity (multiple).
      * @returns {object} A list of drivers. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .get((req, res) => {
         driverHandle.get()
@@ -34,7 +34,7 @@ router.route('/drivers')
      * POST call for the driver entity.
      * @param {string} license - The license plate of the new driver
      * @returns {object} A message and the driver created. (201 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .post((req, res) => {
         driverHandle.create(req.body)
@@ -54,7 +54,7 @@ router.route('/drivers/:driver_id')
     /**
      * GET call for the driver entity (single).
      * @returns {object} the driver with Id driver_id. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .get(function (req, res) {
         driverHandle.get(req.params.driver_id)
@@ -68,7 +68,7 @@ router.route('/drivers/:driver_id')
     /**
      * PATCH call for the driver entity (single).
      * @returns {object} A message and the driver updated. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .patch(function (req, res) {
         driverHandle.update(req.params.driver_id, req.body)
@@ -82,7 +82,7 @@ router.route('/drivers/:driver_id')
     /**
      * DELETE call for the driver entity (single).
      * @returns {object} A string message. (200 Status Code)
-     * @throws Mongoose Database Error (500 Status Code)
+     * @throws Mongoose Database Error
      */
     .delete(function (req, res) {
         driverHandle.del(req.params.driver_id)
@@ -94,7 +94,10 @@ router.route('/drivers/:driver_id')
             })
     });
 
-
+/** 
+ * Express Route: /drivers/:driver_id/cars
+ * @param {string} driver_id - Id Hash of driver Object
+ */
 router.route('/drivers/:driver_id/cars')
     .get((req, res) => {
         Car.find({driver: req.params.driver_id}, (err, cars) => {
@@ -119,6 +122,10 @@ router.route('/drivers/:driver_id/cars')
             });
     });
 
+/** 
+ * Express Route: /drivers/:driver_id/paymentaccounts
+ * @param {string} driver_id - Id Hash of driver Object
+ */
 router.route('/drivers/:driver_id/paymentaccounts')
     .get((req, res) => {
         PayAccount.find({driver_id: req.params.driver_id}, (err, account) => {
